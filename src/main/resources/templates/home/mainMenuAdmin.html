@@ -9,7 +9,7 @@
 <h1 th:text="'Employee: ' + ${employeeUser.getUsername()}"></h1>
 <h2>Admin</h2>
 
-<form action="/mainMenuAdmin" method="get">
+<form action="/mainMenuAdmin" method="get"> <!-- Irrelevant URL -->
   <input type="hidden" name="employeeUserId" th:value="${employeeUser.getEmployeeUserId()}">
   <button type="submit" formaction="/signIn">Create new user</button>
   <button type="submit" formaction="/updateEmployeeUser">Update user</button>

@@ -33,10 +33,10 @@
       <td><input type="text" name="password" th:value="${employeeUser.password}"></td>
       <!-- <td><input type="text" name="department" th:value="${employeeUser.department.name()}"></td> -->
 
-     <!-- <td><select id="department" name="department" required>
-      <option value="">--Vælg en department--</option>
-      <option th:each="employeeUser : ${employeeUser}" th:value="${employeeUser.department.name()}"></option>
-      </select></td> -->
+      <!-- <td><select id="department" name="department" required>
+       <option value="">--Vælg en department--</option>
+       <option th:each="employeeUser : ${employeeUser}" th:value="${employeeUser.department.name()}"></option>
+       </select></td> -->
 
       <td>
         <select name="department" required th:value="${employeeUser.department.name()}">
