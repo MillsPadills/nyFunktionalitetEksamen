@@ -17,8 +17,8 @@
     <thead>
     <tr>
         <th>Rental contract ID</th>
-        <th>Customer ID</th>
-        <th>Car ID</th>
+        <th>Customer name</th>
+        <th>Car brand</th>
         <th>Start date</th>
         <th>End date</th>
         <th>Price</th>
@@ -30,20 +30,20 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="rentalContract : ${rentalContracts}">
+    <tr th:each="rentalContractDetails : ${rentalContracts}">
         <form action="/deleteRentalContractConfirm" method="get">
-            <td th:text="${rentalContract.rentalContractId}"></td>
-            <td th:text="${rentalContract.customerId}"></td>
-            <td th:text="${rentalContract.carId}"></td>
-            <td th:text="${rentalContract.startDate}"></td>
-            <td th:text="${rentalContract.endDate}"></td>
-            <td th:text="${rentalContract.price}"></td>
-            <td th:text="${rentalContract.pickUpLocation}"></td>
-            <td th:text="${rentalContract.conditionOnDelivery}"></td>
-            <td th:text="${rentalContract.conditionUponReturn}"></td>
-            <td th:text="${rentalContract.isRentalContractEnded}"></td>
+            <td th:text="${rentalContractDetails.rentalContractId}"></td>
+            <td th:text="${rentalContractDetails.customerName}"></td>
+            <td th:text="${rentalContractDetails.carBrand}"></td>
+            <td th:text="${rentalContractDetails.startDate}"></td>
+            <td th:text="${rentalContractDetails.endDate}"></td>
+            <td th:text="${rentalContractDetails.price}"></td>
+            <td th:text="${rentalContractDetails.locationId}"></td>
+            <td th:text="${rentalContractDetails.conditionOnDelivery}"></td>
+            <td th:text="${rentalContractDetails.conditionUponReturn}"></td>
+            <td th:text="${rentalContractDetails.isRentalContractEnded}"></td>
             <td>
-                <input type="hidden"  name="rentalContractId" th:value="${rentalContract.rentalContractId}">
+                <input type="hidden"  name="rentalContractId" th:value="${rentalContractDetails.rentalContractId}">
                 <input type="hidden"  name="employeeUserId" th:value="${employeeUserId}">
                 <button type="submit">Delete rental contract</button>
             </td>

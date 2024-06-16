@@ -28,4 +28,13 @@ public class EmployeeUserService {
     public EmployeeUser getEmployee(int employeeId) {
         return employeeUserRepository.getEmployee(employeeId);
     }
+
+
+    public void updateEmployeeUser(String username, String password, EmployeeUserDepartment department, int employeeId) {
+       employeeUserRepository.updateEmployeeUser(username, password, department, employeeId);
+    }
+
+    public void deleteEmployeeUser(int employeeUserId) {
+        employeeUserRepository.deleteEmployeeUser(employeeUserId);
+    }
 }

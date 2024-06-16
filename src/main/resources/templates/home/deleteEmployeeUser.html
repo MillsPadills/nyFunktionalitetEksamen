@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Delete user</title>
+  <link rel="stylesheet" type="text/css" href="/updateEmployeeUser.css">
+
+</head>
+<body>
+<h1>Delete user</h1>
+<h2 th:if="${message}" th:text="${message}"></h2>
+<form action="/mainMenuAdmin">
+  <input type="hidden" name="employeeUserId" th:value="${employeeUserId}">
+  <button type="submit">Go back to main menu</button>
+</form>
+<table>
+  <thead>
+  <tr>
+    <th>User ID</th>
+    <th>Username</th>
+    <th>Password</th>
+    <th>Department</th>
+    <th>Action</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="employeeUser : ${employeeUsers}">
+    <form action="/deleteEmployeeUserConfirm" method="get">
+      <td th:text="${employeeUser.employeeUserId}"></td>
+      <td th:text="${employeeUser.username}"></td>
+      <td th:text="${employeeUser.password}"></td>
+      <td th:text="${employeeUser.department}"></td>
+      <td>
+        <input type="hidden"  name="employeeUserId" th:value="${employeeUserId}">
+        <input type="hidden" name="employeeId" th:value="${employeeUser.employeeUserId}">
+        <button type="submit">Delete user</button>
+      </td>
+    </form>
+  </tr>
+  </tbody>
+</table>
+</body>
+</html>

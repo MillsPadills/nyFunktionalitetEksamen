@@ -1,11 +1,11 @@
 package com.example.carrentalexam.models;
 
 import java.time.LocalDate;
-import java.util.Date;
 
-public class RentalContract {
+public class RentalContractDetails {
     private int rentalContractId;
-    private int customerId;
+    private String customerName;
+    private String carBrand;
     private int carId;
     private LocalDate startDate;
     private LocalDate endDate;
@@ -13,9 +13,9 @@ public class RentalContract {
     private int locationId;
     private String conditionOnDelivery;
     private String conditionUponReturn;
-    private String isRentalContractEnded;
+    private boolean isRentalContractEnded;
 
-    public RentalContract() {
+    public RentalContractDetails() {
     }
 
     public int getRentalContractId() {
@@ -26,12 +26,20 @@ public class RentalContract {
         this.rentalContractId = rentalContractId;
     }
 
-    public int getCustomerId() {
-        return customerId;
+    public String getCustomerName() {
+        return customerName;
     }
 
-    public void setCustomerId(int customerId) {
-        this.customerId = customerId;
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public String getCarBrand() {
+        return carBrand;
+    }
+
+    public void setCarBrand(String carBrand) {
+        this.carBrand = carBrand;
     }
 
     public int getCarId() {
@@ -90,11 +98,11 @@ public class RentalContract {
         this.conditionUponReturn = conditionUponReturn;
     }
 
-    public String getIsRentalContractEnded() {
+    public boolean isRentalContractEnded() {
         return isRentalContractEnded;
     }
 
-    public void setIsRentalContractEnded(String isRentalContractEnded) {
-        this.isRentalContractEnded = isRentalContractEnded;
+    public void setRentalContractEnded(boolean rentalContractEnded) {
+        isRentalContractEnded = rentalContractEnded;
     }
 }

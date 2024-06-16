@@ -14,11 +14,14 @@ import java.util.List;
 public class CarRepository {
     @Autowired
     JdbcTemplate jdbcTemplate;
+
+
     public List<Car> getAllCars() {
         String query = "SELECT * FROM cars;";
         RowMapper rowMapper = new BeanPropertyRowMapper(Car.class);
         return jdbcTemplate.query(query, rowMapper);
     }
+
     public List<Car> getAllCarsThatAreAvailabe() {
         String query = "SELECT * FROM cars where status = 'AVAILABLE';";
         RowMapper rowMapper = new BeanPropertyRowMapper(Car.class);

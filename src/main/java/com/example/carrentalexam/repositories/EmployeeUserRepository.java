@@ -1,6 +1,7 @@
 package com.example.carrentalexam.repositories;
 
 import com.example.carrentalexam.enums.EmployeeUserDepartment;
+import com.example.carrentalexam.models.CustomerCarAndRentalContract;
 import com.example.carrentalexam.models.EmployeeUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -32,4 +33,15 @@ public class EmployeeUserRepository {
         RowMapper<EmployeeUser> rowMapper = new BeanPropertyRowMapper<>(EmployeeUser.class);
         return jdbcTemplate.queryForObject(query, rowMapper, employeeId);
     }
+
+    public void updateEmployeeUser(String username, String password, EmployeeUserDepartment department, int employeeUserId) {
+        String query = "update employee_users set username = ?, password = ?, department = ? where employee_user_id = ?;";
+        jdbcTemplate.update(query, username, password, department.name(), employeeUserId);
+    }
+
+    public void deleteEmployeeUser(int employeeUserId) {
+        String query = "delete from employee_users where employee_user_id = ?;";
+        jdbcTemplate.update(query, employeeUserId);
+    }
+
 }

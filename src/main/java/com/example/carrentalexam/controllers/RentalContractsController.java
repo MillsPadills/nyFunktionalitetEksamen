@@ -1,9 +1,6 @@
 package com.example.carrentalexam.controllers;
 
-import com.example.carrentalexam.models.Car;
-import com.example.carrentalexam.models.CarBrandComparator;
-import com.example.carrentalexam.models.Customer;
-import com.example.carrentalexam.models.CustomerNameComparator;
+import com.example.carrentalexam.models.*;
 import com.example.carrentalexam.services.CarService;
 import com.example.carrentalexam.services.CustomerService;
 import com.example.carrentalexam.services.RentalContractService;
@@ -38,9 +35,11 @@ public class RentalContractsController {
         model.addAttribute("employeeUserId", employeeUserId);
         List<Customer> customers = customerService.getAllCustomers();
         List<Car> cars = carService.getAllCarsThatAreAvailable();
+        List<Location> locations = rentalContractService.getAllLocations();
         Collections.sort(customers, new CustomerNameComparator());
         Collections.sort(cars, new CarBrandComparator());
         model.addAttribute("customers", customers);
+        model.addAttribute("locations", locations);
         model.addAttribute("cars", cars);
         model.addAttribute("message", message);
         return "home/createNewRentalContract";
@@ -50,13 +49,13 @@ public class RentalContractsController {
     public String createRentalContract(@RequestParam int customerId, @RequestParam int carId,
                                        @RequestParam LocalDate startDate,
                                        @RequestParam LocalDate endDate, @RequestParam double price,
-                                       @RequestParam String pickUpLocation,
+                                       @RequestParam int locationId,
                                        @RequestParam String conditionOnDelivery,
                                        @RequestParam String conditionUponReturn,
                                        @RequestParam int employeeUserId) {
         try {
             rentalContractService.createRentalContract(customerId, carId, startDate, endDate, price,
-                    pickUpLocation, conditionOnDelivery, conditionUponReturn);
+                    locationId, conditionOnDelivery, conditionUponReturn);
 
             return "redirect:/createRentalContract?employeeUserId=" + employeeUserId + "&message=Rental+contract+has+been+created.";
         } catch (Exception e) {
@@ -72,7 +71,7 @@ public class RentalContractsController {
             @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
             @RequestParam("employeeUserId") int employeeUserId,
             @RequestParam("customerId") int customerId,
-            @RequestParam("pickUpLocation") String pickUpLocation,
+            @RequestParam("locationId") int locationId,
             @RequestParam("conditionOnDelivery") String conditionOnDelivery,
             RedirectAttributes redirectAttributes) {
 
@@ -87,25 +86,29 @@ public class RentalContractsController {
         redirectAttributes.addFlashAttribute("carId", carId);
         redirectAttributes.addFlashAttribute("startDate", startDate.toString());
         redirectAttributes.addFlashAttribute("endDate", endDate.toString());
-        redirectAttributes.addFlashAttribute("pickUpLocation", pickUpLocation);
+        redirectAttributes.addFlashAttribute("locationId", locationId);
         redirectAttributes.addFlashAttribute("conditionOnDelivery", conditionOnDelivery);
         redirectAttributes.addFlashAttribute("employeeUserId", employeeUserId);
         // redirectAttribues.addFlashAttribute bruges til at allerede indtastede data forbliver på siden efter brugeren for systemet til at udregne den samlede pris.
         return "redirect:/createRentalContract?employeeUserId=" + employeeUserId;
     }
 
+
     @GetMapping("/deleteRentalContract")
-    public String deleteRentalContract(@RequestParam int employeeUserId, @RequestParam (required = false) String message, Model model) {
-        model.addAttribute("rentalContracts", rentalContractService.getAllRentalContracts());
+    public String deleteRentalContract(@RequestParam int employeeUserId, @RequestParam(required = false) String message, Model model) {
+        List<RentalContractDetails> rentalContracts = rentalContractService.getAllRentalContractsDetails();
+        model.addAttribute("rentalContracts", rentalContracts);
         model.addAttribute("employeeUserId", employeeUserId);
         return "home/deleteRentalContract";
-
     }
+
 
     @GetMapping("/deleteRentalContractConfirm")
     public String deleteRentalContractConfirm(@RequestParam int rentalContractId, @RequestParam int employeeUserId, Model model) {
-        model.addAttribute("rentalContract", rentalContractService.getRentalContract(rentalContractId));
+        RentalContractDetails rentalContractDetails = rentalContractService.getRentalContractDetails(rentalContractId);
+        model.addAttribute("rentalContract", rentalContractDetails);
         model.addAttribute("employeeUserId", employeeUserId);
+        model.addAttribute("carId", rentalContractDetails.getCarId());
         return "home/deleteRentalContractConfirm";
     }
 
@@ -115,5 +118,4 @@ public class RentalContractsController {
         carService.changeCarToAvailable(carId);
         return "redirect:/deleteRentalContract?employeeUserId=" + employeeUserId + "&message=Rental+contract+has+been+deleted";
     }
-
 }

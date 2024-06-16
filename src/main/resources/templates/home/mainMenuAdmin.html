@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin</title>
+  <link rel="stylesheet" type="text/css" href="/mainMenuAdmin.css">
+</head>
+<body>
+<h1 th:text="'Employee: ' + ${employeeUser.getUsername()}"></h1>
+<h2>Admin</h2>
+
+<form action="/mainMenuAdmin" method="get">
+  <input type="hidden" name="employeeUserId" th:value="${employeeUser.getEmployeeUserId()}">
+  <button type="submit" formaction="/signIn">Create new user</button>
+  <button type="submit" formaction="/updateEmployeeUser">Update user</button>
+  <button type="submit" formaction="/deleteEmployeeUser">Delete user</button>
+</form>
+
+<form action="/" method="get">
+  <button type="submit">Log out</button>
+</form>
+
+</body>
+</html>
+

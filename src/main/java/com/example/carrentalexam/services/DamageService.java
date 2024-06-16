@@ -1,5 +1,6 @@
 package com.example.carrentalexam.services;
 
+import com.example.carrentalexam.models.CustomerRepairCosts;
 import com.example.carrentalexam.models.Damage;
 import com.example.carrentalexam.repositories.DamageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,5 +24,12 @@ public class DamageService {
         damageRepository.changeDamageFromReportedToProcessed(damageId);
     }
 
+    public double getTotalRepairCosts() {
+        return damageRepository.getTotalRepairCosts();
+    }
+
+    public List<CustomerRepairCosts> getAllCustomerRepairCosts() {
+        return damageRepository.getAllCustomerRepairCosts();
+    }
 
 }

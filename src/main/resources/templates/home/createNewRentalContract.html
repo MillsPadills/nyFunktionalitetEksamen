@@ -38,8 +38,12 @@
         <input type="text" id="price" name="price" required readonly th:value="${price}">
     </div>
     <div>
-        <label for="pickUpLocation">Pick up location</label>
-        <input type="text" id="pickUpLocation" name="pickUpLocation" required th:value="${pickUpLocation}">
+        <label for="locationId">Pick up location</label>
+        <select id="locationId" name="locationId" required>
+            <option value="">--Vælg en opsamlingsplads--</option>
+            <option th:each="location : ${locations}" th:value="${location.locationId}"
+                    th:selected="${location.locationId == locationId}" th:text="${location.description}"></option>
+        </select>
     </div>
     <div>
         <label for="conditionOnDelivery">Condition on delivery</label>

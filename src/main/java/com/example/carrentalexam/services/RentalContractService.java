@@ -1,8 +1,7 @@
 package com.example.carrentalexam.services;
 
 import com.example.carrentalexam.enums.CarStatus;
-import com.example.carrentalexam.models.Car;
-import com.example.carrentalexam.models.RentalContract;
+import com.example.carrentalexam.models.*;
 import com.example.carrentalexam.repositories.CarRepository;
 import com.example.carrentalexam.repositories.RentalContractRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,11 +22,11 @@ public class RentalContractService {
     }
 
     public void createRentalContract(int customerId, int carId, LocalDate startDate,
-                                     LocalDate endDate, double price, String pickUpLocation,
+                                     LocalDate endDate, double price, int locationId,
                                      String conditionOnDelivery, String conditionUponReturn) {
 
         rentalContractRepository.createRentalContract(customerId, carId, startDate, endDate, price,
-                pickUpLocation, conditionOnDelivery, conditionUponReturn);
+                locationId, conditionOnDelivery, conditionUponReturn);
 
         carRepository.updateCarStatus(carId, CarStatus.RENTED.name());
     }
@@ -71,5 +70,21 @@ public class RentalContractService {
 
     public void deleteRentalContract(int rentalContractId) {
         rentalContractRepository.deleteRentalContract(rentalContractId);
+    }
+
+    public List<RentalContractDetails> getAllRentalContractsDetails() {
+        return rentalContractRepository.getAllRentalContractsDetails();
+    }
+
+    public RentalContractDetails getRentalContractDetails(int rentalContractId) {
+        return rentalContractRepository.getRentalContractDetails(rentalContractId);
+    }
+
+    public List<CustomerCarAndRentalContract> getAllCustomerCarAndRentalContract() {
+        return rentalContractRepository.getAllCustomerCarAndRentalContracts();
+    }
+
+    public List<Location> getAllLocations() {
+        return rentalContractRepository.getAllLocations();
     }
 }

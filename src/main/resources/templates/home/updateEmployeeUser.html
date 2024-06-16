@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Update customer</title>
+  <link rel="stylesheet" type="text/css" href="/updateEmployeeUser.css">
+
+</head>
+<body>
+<h1>Update user</h1>
+<h2 th:if="${message}" th:text="${message}"></h2>
+<form action="/mainMenuAdmin">
+  <input type="hidden" name="employeeUserId" th:value="${employeeUserId}">
+  <button type="submit">Go back to admin menu</button>
+</form>
+<table>
+  <thead>
+  <tr>
+    <th>User ID</th>
+    <th>Username</th>
+    <th>Password</th>
+    <th>Department</th>
+    <th>Action</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="employeeUser : ${employeeUser}">
+    <form action="/updateEmployeeUserAction" method="post">
+      <td th:text="${employeeUser.employeeUserId}"></td>
+
+      <input type="hidden"  name="employeeUserId" th:value="${employeeUserId}">
+      <td><input type="text" name="username" th:value="${employeeUser.username}"></td>
+      <td><input type="text" name="password" th:value="${employeeUser.password}"></td>
+      <!-- <td><input type="text" name="department" th:value="${employeeUser.department.name()}"></td> -->
+
+     <!-- <td><select id="department" name="department" required>
+      <option value="">--Vælg en department--</option>
+      <option th:each="employeeUser : ${employeeUser}" th:value="${employeeUser.department.name()}"></option>
+      </select></td> -->
+
+      <td>
+        <select name="department" required th:value="${employeeUser.department.name()}">
+          <option value="ADMIN">Admin</option>
+          <option value="DATA_REGISTRATION">Data Registration</option>
+          <option value="DAMAGE_AND_REPAIR">Damage and Repair</option>
+          <option value="BUSINESS_DEVELOPERS">Business Developers</option>
+        </select>
+
+      </td>
+
+      <input type="hidden" name="employeeId" th:value="${employeeUser.employeeUserId}">
+      <td>
+
+        <button type="submit">Save changes</button>
+
+      </td>
+    </form>
+  </tr>
+  </tbody>
+</table>
+</body>
+</html>

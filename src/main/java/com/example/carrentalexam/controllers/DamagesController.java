@@ -43,7 +43,6 @@ public class DamagesController {
         model.addAttribute("employeeUserId", employeeUserId);
         model.addAttribute("message", message);
         model.addAttribute("amountOfDamages", amountOfDamages);
-
     return "home/createDamageReport";
     }
 
@@ -60,7 +59,6 @@ public class DamagesController {
             return "redirect:/processCarYes?carId=" + carId + "&rentalContractId=" +
                     rentalContractId + "&employeeUserId=" + employeeUserId + "&message=Something+went+wrong.+Please+try+agian.";
         }
-
     }
 
     @PostMapping("/processCarComplete")

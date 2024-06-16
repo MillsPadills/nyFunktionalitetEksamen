@@ -63,6 +63,7 @@ public class CarsController {
         model.addAttribute("message", message);
         return "home/deleteCar";
     }
+
     @GetMapping("/deleteCarConfirm")
     public String deleteCarConfirm(@RequestParam int carId, @RequestParam int employeeUserId, Model model) {
         model.addAttribute("car", carService.getCar(carId));
@@ -76,5 +77,4 @@ public class CarsController {
         carService.deleteCar(carId);
         return "redirect:/deleteCar?employeeUserId=" + employeeUserId + "&message=Car+has+been+deleted";
     }
-
 }

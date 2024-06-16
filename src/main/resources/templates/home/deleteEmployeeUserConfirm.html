@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Confirm delete</title>
+    <link rel="stylesheet" type="text/css" href="/deleteEmployeeUserConfirm.css">
+</head>
+<body>
+<h1>Are you sure you want to delete this user?</h1>
+<table>
+    <thead>
+    <tr>
+        <th>User ID</th>
+        <th>Username</th>
+        <th>Password</th>
+        <th>Department</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td th:text="${employeeUser.employeeUserId}"></td>
+        <td th:text="${employeeUser.username}"></td>
+        <td th:text="${employeeUser.password}"></td>
+        <td th:text="${employeeUser.department}"></td>
+        <td>
+            <form action="/deleteEmployeeUserAction" method="post" class="form-inline">
+                <input type="hidden" name="employeeUserId" th:value="${employeeUserId}">
+                <input type="hidden" name="employeeId" th:value="${employeeUser.employeeUserId}">
+                <button type="submit">Delete user</button>
+            </form>
+            <form action="/deleteEmployeeUser" method="get" class="form-inline">
+                <input type="hidden" name="employeeUserId" th:value="${employeeUserId}">
+                <button type="submit">Cancel</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

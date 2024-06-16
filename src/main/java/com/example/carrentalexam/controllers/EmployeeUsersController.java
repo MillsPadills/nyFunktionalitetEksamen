@@ -70,7 +70,6 @@ public class EmployeeUsersController {
         } catch (Exception e) {
             return "redirect:/signIn?message=Something+went+wrong.+Username and password can max be 100 characters.";
         }
-
     }
 
     @GetMapping("/mainMenuDataRegistration")
@@ -100,8 +99,6 @@ public class EmployeeUsersController {
                 }
             }
         }
-
-
         List<RentalContract> allRentalContracts = rentalContractService.getAllRentalContractsThatsActive();
         List<CarWithContract> carsInMaintenanceWithDamages = new ArrayList<>();
 
@@ -112,8 +109,6 @@ public class EmployeeUsersController {
                 carsInMaintenanceWithDamages.add(new CarWithContract(car, contract.getRentalContractId(), damages));
             }
         }
-
-
         model.addAttribute("rentalContractCarsReturned", carsFromRentalContractsReturned);
         model.addAttribute("carsInMaintenanceWithDamages", carsInMaintenanceWithDamages);
         model.addAttribute("employeeUserId", employeeUserId);
@@ -122,19 +117,53 @@ public class EmployeeUsersController {
     }
 
 
+   /* @GetMapping("/mainMenuBusinessDeveloper")
+    public String businessDeveloper(@RequestParam int employeeUserId, Model model) {
+        try {
+            List<Car> rentedCars = rentalContractService.getRentedCarsCount();
+            double totalRevenue = rentalContractService.getTotalRevenue();
+            double totalRepairCosts = damageService.getTotalRepairCosts();
+            List<CustomerRepairCosts> customerRepairCosts = damageService.getAllCustomerRepairCosts();
 
+            model.addAttribute("employeeUser", employeeUserService.getEmployee(employeeUserId));
+            model.addAttribute("employeeUserId", employeeUserId);
+            model.addAttribute("rentedCarsCount", rentedCars.size());
+            model.addAttribute("totalRevenue", totalRevenue);
+            model.addAttribute("totalRepairCosts", totalRepairCosts);
+            model.addAttribute("customerRepairCosts", customerRepairCosts);
+
+            return "home/mainMenuBusinessDeveloper";
+        } catch (NullPointerException e) {
+            model.addAttribute("error", "Data not found or incomplete data");
+            return "redirect:/mainMenuBusinessDeveloper?employeeUserId=" + employeeUserId;
+        } catch (Exception e) {
+            model.addAttribute("error", "An unexpected error occurred: " + e.getMessage());
+            return "redirect:/mainMenuBusinessDeveloper?employeeUserId=" + employeeUserId;
+        }
+    }
+
+    */
 
     @GetMapping("/mainMenuBusinessDeveloper")
     public String businessDeveloper(@RequestParam int employeeUserId, Model model) {
         try {
-
             List<Car> rentedCars = rentalContractService.getRentedCarsCount();
             double totalRevenue = rentalContractService.getTotalRevenue();
+            double totalRepairCosts = damageService.getTotalRepairCosts();
+            List<CustomerRepairCosts> customerRepairCosts = damageService.getAllCustomerRepairCosts();
+            List<CustomerCarAndRentalContract> customerCarAndRentalContracts = rentalContractService.getAllCustomerCarAndRentalContract();
+            List<Car> carsThatAreAvailable = carService.getAllCarsThatAreAvailable();
+            // List<Car> carsThatAreMaintenance = carService.getAllCarsThatAreMaintenance();
 
-            model.addAttribute(employeeUserService.getEmployee(employeeUserId));
+            model.addAttribute("employeeUser", employeeUserService.getEmployee(employeeUserId));
             model.addAttribute("employeeUserId", employeeUserId);
             model.addAttribute("rentedCarsCount", rentedCars.size());
             model.addAttribute("totalRevenue", totalRevenue);
+            model.addAttribute("totalRepairCosts", totalRepairCosts);
+            model.addAttribute("customerRepairCosts", customerRepairCosts);
+            model.addAttribute("customerCarAndRentalContracts", customerCarAndRentalContracts);
+            model.addAttribute("carsThatAreAvailable", carsThatAreAvailable);
+            // model.addAttribute("carsThatAreMaintenance", carsThatAreMaintenance);
 
             return "home/mainMenuBusinessDeveloper";
         } catch (NullPointerException e) {
@@ -147,4 +176,81 @@ public class EmployeeUsersController {
     }
 
 
+    @GetMapping("/mainMenuAdmin")
+    public String admin(@RequestParam int employeeUserId, Model model) {
+        model.addAttribute(employeeUserService.getEmployee(employeeUserId));
+        return "home/mainMenuAdmin";
+    }
+
+    @GetMapping("/updateEmployeeUser")
+    public String updateEmployeeUser(@RequestParam int employeeUserId, @RequestParam (required = false)
+    String message, Model model) {
+        model.addAttribute("employeeUser", employeeUserService.getAllEmployees());
+        model.addAttribute("employeeUserId", employeeUserId);
+        model.addAttribute("message", message);
+        return "home/updateEmployeeUser";
+    }
+
+    @PostMapping("/updateEmployeeUserAction")
+    public String updateEmployeeUser(@RequestParam int employeeUserId, @RequestParam String username,
+                                     @RequestParam String password, @RequestParam EmployeeUserDepartment department,
+                                     @RequestParam int employeeId) {
+        try {
+            employeeUserService.updateEmployeeUser(username, password, department, employeeId);
+            return "redirect:/updateEmployeeUser?employeeUserId=" + employeeUserId + "&message=User+has+been+updated";
+        } catch (Exception e) {
+            return "redirect:/updateEmployeeUser?employeeUserId=" + employeeUserId + "&message=Something+went+wrong.+Try+again";
+        }
+    }
+
+    @GetMapping("/deleteEmployeeUser")
+    public String deleteEmployeeUser(@RequestParam int employeeUserId, @RequestParam (required = false) String message, Model model) {
+        model.addAttribute("employeeUsers", employeeUserService.getAllEmployees());
+        model.addAttribute("employeeUserId", employeeUserId);
+        model.addAttribute("message", message);
+        return "home/deleteEmployeeUser";
+    }
+
+    @GetMapping("/deleteEmployeeUserConfirm")
+    public String deleteEmployeeUserConfirm(@RequestParam int employeeUserId, @RequestParam int employeeId, Model model) {
+        model.addAttribute("employeeUser", employeeUserService.getEmployee(employeeId));
+        model.addAttribute("employeeUserId", employeeUserId);
+        return "home/deleteEmployeeUserConfirm";
+    }
+
+    @PostMapping("/deleteEmployeeUserAction")
+    public String deleteEmployeeUser(@RequestParam int employeeUserId, @RequestParam int employeeId) {
+        employeeUserService.deleteEmployeeUser(employeeId);
+        return "redirect:/deleteEmployeeUser?employeeUserId=" + employeeUserId + "&message=User+has+been+deleted";
+    }
+
+    /* @GetMapping("/mainMenuBusinessDeveloper")
+    public String businessDeveloper(@RequestParam int employeeUserId, Model model) {
+        try {
+
+            List<Car> rentedCars = rentalContractService.getRentedCarsCount();
+            double totalRevenue = rentalContractService.getTotalRevenue();
+            List<CustomerCarAndRentalContract> customerCarAndRentalContracts = rentalContractService.getAllCustomerCarAndRentalContract();
+            List<Car> carsThatAreAvailable = carService.getAllCarsThatAreAvailable();
+            // List<Car> carsThatAreMaintenance = carService.getAllCarsThatAreMaintenance();
+
+            model.addAttribute(employeeUserService.getEmployee(employeeUserId));
+            model.addAttribute("employeeUserId", employeeUserId);
+            model.addAttribute("rentedCarsCount", rentedCars.size());
+            model.addAttribute("totalRevenue", totalRevenue);
+            model.addAttribute("customerCarAndRentalContracts", customerCarAndRentalContracts);
+            model.addAttribute("carsThatAreAvailable", carsThatAreAvailable);
+            // model.addAttribute("carsThatAreMaintenance", carsThatAreMaintenance);
+
+            return "home/mainMenuBusinessDeveloper";
+        } catch (NullPointerException e) {
+            model.addAttribute("error", "Data not found or incomplete data");
+            return "redirect:/mainMenuBusinessDeveloper?employeeUserId=" + employeeUserId;
+        } catch (Exception e) {
+            model.addAttribute("error", "An unexpected error occurred: " + e.getMessage());
+            return "redirect:/mainMenuBusinessDeveloper?employeeUserId=" + employeeUserId;
+        }
+    }
+
+     */
 }

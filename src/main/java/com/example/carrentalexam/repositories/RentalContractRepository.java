@@ -1,8 +1,6 @@
 package com.example.carrentalexam.repositories;
 
-import com.example.carrentalexam.models.Car;
-import com.example.carrentalexam.models.EmployeeUser;
-import com.example.carrentalexam.models.RentalContract;
+import com.example.carrentalexam.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -21,11 +19,11 @@ public class RentalContractRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void createRentalContract(int customerId, int carId, LocalDate startDate, LocalDate endDate, double price, String pickUpLocation, String conditionOnDelivery, String conditionUponReturn) {
+    public void createRentalContract(int customerId, int carId, LocalDate startDate, LocalDate endDate, double price, int locationId, String conditionOnDelivery, String conditionUponReturn) {
         String query = "insert into rental_contracts(customer_id, car_id, start_date, end_date, " +
-                "price, pick_up_location, condition_on_delivery, condition_upon_return, is_rental_contract_ended)" +
+                "price, location_id, condition_on_delivery, condition_upon_return, is_rental_contract_ended)" +
                 "values(?, ?, ?, ?, ?, ?, ?, ?, ?);";
-        jdbcTemplate.update(query, customerId, carId, startDate, endDate, price, pickUpLocation, conditionOnDelivery, conditionUponReturn, "no"); // "no" er hardcodet til at kontrakten ikke er afsluttet.
+        jdbcTemplate.update(query, customerId, carId, startDate, endDate, price, locationId, conditionOnDelivery, conditionUponReturn, "no"); // "no" er hardcodet til at kontrakten ikke er afsluttet.
     }
 
 
@@ -40,7 +38,6 @@ public class RentalContractRepository {
         Double result = jdbcTemplate.queryForObject(query, Double.class);
         return result != null ? result : 0.0;
     }
-
 
 
     public List<RentalContract> getAllRentalContractWhereTheCarHasBeenReturned() {
@@ -87,5 +84,53 @@ public class RentalContractRepository {
     public void deleteRentalContract(int rentalContractId) {
         String query = "delete from rental_contracts where rental_contract_id = ?;";
         jdbcTemplate.update(query, rentalContractId);
+    }
+
+    public List<RentalContractDetails> getAllRentalContractsDetails() {
+        String query = "SELECT rc.rental_contract_id, c.name AS customer_name, ca.brand AS car_brand, " +
+                "rc.start_date, rc.end_date, rc.price, rc.location_id, " +
+                "rc.condition_on_delivery, rc.condition_upon_return, rc.is_rental_contract_ended " +
+                "FROM rental_contracts rc " +
+                "JOIN customers c ON rc.customer_id = c.customer_id " +
+                "JOIN cars ca ON rc.car_id = ca.car_id";
+        RowMapper<RentalContractDetails> rowMapper = new BeanPropertyRowMapper<>(RentalContractDetails.class);
+        return jdbcTemplate.query(query, rowMapper);
+    }
+
+    public RentalContractDetails getRentalContractDetails(int rentalContractId) {
+        String query = "SELECT rc.rental_contract_id, c.name AS customer_name, ca.brand AS car_brand, " +
+                    "rc.start_date, rc.end_date, rc.price, rc.location_id, " +
+                    "rc.condition_on_delivery, rc.condition_upon_return, rc.is_rental_contract_ended, " +
+                    "rc.car_id " + // Make sure to include car_id
+                    "FROM rental_contracts rc " +
+                    "JOIN customers c ON rc.customer_id = c.customer_id " +
+                    "JOIN cars ca ON rc.car_id = ca.car_id " +
+                    "WHERE rc.rental_contract_id = ?";
+        RowMapper<RentalContractDetails> rowMapper = new BeanPropertyRowMapper<>(RentalContractDetails.class);
+        return jdbcTemplate.queryForObject(query, rowMapper, rentalContractId);
+    }
+
+    public List<CustomerCarAndRentalContract> getAllCustomerCarAndRentalContracts() {
+        String query = "SELECT \n" +
+                "    c.name, \n" +
+                "    ca.brand, \n" +
+                "    rc.start_date, \n" +
+                "    rc.end_date, \n" +
+                "    DATEDIFF(rc.start_date, CURDATE()) AS starts_in_x_days, \n" +
+                "    DATEDIFF(rc.end_date, CURDATE()) AS ends_in_x_days\n" +
+                "FROM \n" +
+                "    customers c\n" +
+                "JOIN \n" +
+                "    rental_contracts rc ON c.customer_id = rc.customer_id\n" +
+                "JOIN \n" +
+                "    cars ca ON rc.car_id = ca.car_id;\n;";
+        RowMapper<CustomerCarAndRentalContract> rowMapper = new BeanPropertyRowMapper<>(CustomerCarAndRentalContract.class);
+        return jdbcTemplate.query(query, rowMapper);
+    }
+
+    public List<Location> getAllLocations() {
+        String query = "select * from locations;";
+        RowMapper<Location> rowMapper = new BeanPropertyRowMapper<>(Location.class);
+        return jdbcTemplate.query(query, rowMapper);
     }
 }

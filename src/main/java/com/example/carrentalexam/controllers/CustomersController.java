@@ -78,7 +78,4 @@ public class CustomersController {
         customerService.deleteCustomer(customerId);
         return "redirect:/deleteCustomer?employeeUserId=" + employeeUserId + "&message=Customer+has+been+deleted";
     }
-
-
-
 }
